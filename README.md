@@ -284,54 +284,54 @@ VIEW For Report Generating
 
 22.  Analyse sales performance over time Using Different Functions
 
-        SELECT
-            YEAR(order_date) AS order_year,
-            MONTH(order_date) AS order_month,
-            SUM(sales_amount) AS total_sales,
-            COUNT(DISTINCT customer_key) AS total_customers,
-            SUM(quantity) AS total_quantity
-        FROM gold.fact_sales
-        WHERE order_date IS NOT NULL
-        GROUP BY YEAR(order_date), MONTH(order_date)
-        ORDER BY YEAR(order_date), MONTH(order_date);
+            SELECT
+                YEAR(order_date) AS order_year,
+                MONTH(order_date) AS order_month,
+                SUM(sales_amount) AS total_sales,
+                COUNT(DISTINCT customer_key) AS total_customers,
+                SUM(quantity) AS total_quantity
+            FROM gold.fact_sales
+            WHERE order_date IS NOT NULL
+            GROUP BY YEAR(order_date), MONTH(order_date)
+            ORDER BY YEAR(order_date), MONTH(order_date);
 
-        SELECT
-            DATETRUNC(month, order_date) AS order_date,
-            SUM(sales_amount) AS total_sales,
-            COUNT(DISTINCT customer_key) AS total_customers,
-            SUM(quantity) AS total_quantity
-        FROM gold.fact_sales
-        WHERE order_date IS NOT NULL
-        GROUP BY DATETRUNC(month, order_date)
-        ORDER BY DATETRUNC(month, order_date);
+            SELECT
+                DATETRUNC(month, order_date) AS order_date,
+                SUM(sales_amount) AS total_sales,
+                COUNT(DISTINCT customer_key) AS total_customers,
+                SUM(quantity) AS total_quantity
+            FROM gold.fact_sales
+            WHERE order_date IS NOT NULL
+            GROUP BY DATETRUNC(month, order_date)
+            ORDER BY DATETRUNC(month, order_date);
 
-        SELECT
-            FORMAT(order_date, 'yyyy-MMM') AS order_date,
-            SUM(sales_amount) AS total_sales,
-            COUNT(DISTINCT customer_key) AS total_customers,
-            SUM(quantity) AS total_quantity
-        FROM gold.fact_sales
-        WHERE order_date IS NOT NULL
-        GROUP BY FORMAT(order_date, 'yyyy-MMM')
-        ORDER BY FORMAT(order_date, 'yyyy-MMM');
+            SELECT
+                FORMAT(order_date, 'yyyy-MMM') AS order_date,
+                SUM(sales_amount) AS total_sales,
+                COUNT(DISTINCT customer_key) AS total_customers,
+                SUM(quantity) AS total_quantity
+            FROM gold.fact_sales
+            WHERE order_date IS NOT NULL
+            GROUP BY FORMAT(order_date, 'yyyy-MMM')
+            ORDER BY FORMAT(order_date, 'yyyy-MMM');
 
 23.  Calculate the total sales per month and the running total of sales over time 
 
-        SELECT
-            order_date,
-            total_sales,
-            SUM(total_sales) OVER (ORDER BY order_date) AS running_total_sales,
-            AVG(avg_price) OVER (ORDER BY order_date) AS moving_average_price
-        FROM
-        (
-            SELECT 
-                DATETRUNC(year, order_date) AS order_date,
-                SUM(sales_amount) AS total_sales,
-                AVG(price) AS avg_price
-            FROM gold.fact_sales
-            WHERE order_date IS NOT NULL
-            GROUP BY DATETRUNC(year, order_date)
-        ) t
+            SELECT
+                order_date,
+                total_sales,
+                SUM(total_sales) OVER (ORDER BY order_date) AS running_total_sales,
+                AVG(avg_price) OVER (ORDER BY order_date) AS moving_average_price
+            FROM
+            (
+                SELECT 
+                    DATETRUNC(year, order_date) AS order_date,
+                    SUM(sales_amount) AS total_sales,
+                    AVG(price) AS avg_price
+                FROM gold.fact_sales
+                WHERE order_date IS NOT NULL
+                GROUP BY DATETRUNC(year, order_date)
+            ) t
 
 24. Analyze the yearly performance of products by comparing their sales to both the    average   sales performance of the product and the previous year's sales .
 
